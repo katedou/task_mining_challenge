@@ -1,0 +1,7 @@
+pandas~=2.2.3 
+pyarrow~=17.0.0
+fastparquet~=2024.5.0
+scikit-learn
+wandb~=0.18.2
+fastapi~=0.115.0
+fastapi[standard]

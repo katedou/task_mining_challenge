@@ -1,0 +1,7 @@
+torch~=2.4.1
+ipykernel
+matplotlib~=3.9.2
+seaborn~=0.13.2
+isort~=5.13.2
+black~=24.8.0
+mypy~=1.11.2

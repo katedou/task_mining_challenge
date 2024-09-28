@@ -1,0 +1,16 @@
+train:
+  source_data: "./data/uWaveGestures.parquet"
+  input_dim: 48
+  hidden_dims: [128, 64, 32] # create a 3 hiden layers model
+  output_dim: 8
+  batch_size: 16
+  learning_rate: 0.01
+  momentum: 0.9
+  num_epochs: 1000
+  model_root_path: './models'
+  train_data_root_path: './data/preprocessed_train_data/'
+  test_data_root_path: './data/preprocessed_test_data/'
+
+test:
+  path_to_test_data: './data/preprocessed_test_data/'
+  path_to_model: './models/best_model.pth'
