@@ -1,8 +1,2 @@
 [tool.ruff]
-target-version = "py38"
-
-[tool.isort]
-profile = 'black'
-
-[tool.pylint.format]
-max-line-length = "88"
+target-version = "py311"

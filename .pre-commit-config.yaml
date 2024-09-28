@@ -8,22 +8,6 @@ repos:
   rev: v4.5.0
   hooks:
   - id: check-yaml
-- repo: local
-  hooks:
-  - id: isort
-    name: isort (python)
-    entry: python -m isort
-    args: [--settings-path=./pyproject.toml]
-    language: system
-- repo: local
-  hooks:
-  - id: black
-    name: black
-    entry: python -m black
-    language: system
-    types: [python]
-    args: [--config=./pyproject.toml]
-    verbose: true
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
   rev: v0.6.8
