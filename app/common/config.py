@@ -18,15 +18,15 @@ SWAGGER_TAGS = [
         "description": "Perform inference on new data points. Users can use older versions of the model.",
     },
     {
-        "name": "Retrive Model Information",
+        "name": "RetrieveModelInformation",
         "description": "Retrieve model versions evaluation metrics.",
     },
     {
-        "name": "Delete model",
+        "name": "DeleteModel",
         "description": "Delete specific model version.",
     },
     {
-        "name": "Extend existing dataset",
+        "name": "InsertDataset",
         "description": "Extend the dataset with new data",
     },
 ]

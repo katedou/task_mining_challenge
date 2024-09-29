@@ -1,7 +1,8 @@
 version: '3'
 
 vars:
-  PYTHON_VENV: .venv # Set the location of the virtual environment
+  PYTHON_VENV: .venv
+  APP_PORT: 5000
 
 tasks:
   # Creates a python virtual environment
@@ -32,3 +33,9 @@ tasks:
 
       # once the env is updated, the pre-commit need to be installed again
       uv pip install -U pre-commit && pre-commit install
+
+  run-local:
+    cmds:
+    - |
+      source {{.PYTHON_VENV}}/bin/activate
+      uvicorn app.main:app --port {{.APP_PORT}} --timeout-keep-alive 10 --reload

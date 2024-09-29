@@ -10,5 +10,5 @@ source .venv/bin/activate
 ```
 
 ```bash
-python train.py --cfg ./config.yaml --model-version 1
+python -m training.train --cfg ./training/config.yaml --model_version 2
 ```

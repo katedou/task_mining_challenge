@@ -21,11 +21,11 @@ def main(path_to_config_file: str, model_version: int):
     cfg = yaml.load(open(path_to_config_file, "r"), Loader=yaml.FullLoader)
     train_config = cfg["train"]
 
-    # load in data with preprocsesing
-    prcocessed_data = DataPreprocessor(cfg)
+    # load in data with preprocessing
+    processed_data = DataPreprocessor(model_version, cfg)
 
-    train_dataset = GestureData(prcocessed_data.X_train_scaled, prcocessed_data.y_train)
-    test_dataset = GestureData(prcocessed_data.X_test_scaled, prcocessed_data.y_test)
+    train_dataset = GestureData(processed_data.X_train_scaled, processed_data.y_train)
+    test_dataset = GestureData(processed_data.X_test_scaled, processed_data.y_test)
     train_loader = DataLoader(
         train_dataset, batch_size=train_config["batch_size"], shuffle=True
     )
@@ -33,36 +33,33 @@ def main(path_to_config_file: str, model_version: int):
         test_dataset, batch_size=train_config["batch_size"], shuffle=False
     )
 
-    # load all hyper parameters from config file
-    input_dim = train_config["input_dim"]
-    hidden_dims = train_config["hidden_dims"]
-    output_dim = train_config["output_dim"]
-    momentum = train_config["momentum"]
-    learning_rate = train_config["learning_rate"]
-    num_epochs = train_config["num_epochs"]
-    batch_size = train_config["batch_size"]
+    # Simplified hyperparameters handling
+    hyperparameters = {
+        "input_dim": train_config["input_dim"],
+        "hidden_dims": train_config["hidden_dims"],
+        "output_dim": train_config["output_dim"],
+        "momentum": train_config["momentum"],
+        "learning_rate": train_config["learning_rate"],
+        "num_epochs": train_config["num_epochs"],
+        "batch_size": train_config["batch_size"],
+    }
 
     model = ShallowNet(
-        train_config["input_dim"],
-        train_config["hidden_dims"],
-        train_config["output_dim"],
+        hyperparameters["input_dim"],
+        hyperparameters["hidden_dims"],
+        hyperparameters["output_dim"],
     )
     # define loss function and optimizer
     loss_function = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
+    optimizer = torch.optim.SGD(
+        model.parameters(),
+        lr=hyperparameters["learning_rate"],
+        momentum=hyperparameters["momentum"],
+    )
+
     # Log model architecture and hyperparameters
     wandb.watch(model, log="all")
-    wandb.config.update(
-        {
-            "learning_rate": learning_rate,
-            "momentum": momentum,
-            "epochs": num_epochs,
-            "batch_size": batch_size,
-            "hidden_dim": hidden_dims,
-            "input_dim": input_dim,
-            "output_dim": output_dim,
-        }
-    )
+    wandb.config.update(hyperparameters)
 
     # Initialize variables to keep track of best performance
     best_accuracy = 0.0
@@ -74,7 +71,7 @@ def main(path_to_config_file: str, model_version: int):
     best_metrics_path = os.path.join(model_base_output, "best_model_metrics.json")
 
     # start the training
-    for epoch in range(num_epochs):
+    for epoch in range(hyperparameters["num_epochs"]):
         model.train()
         running_loss = 0.0
         for i, (inputs, labels) in enumerate(train_loader):
@@ -114,7 +111,14 @@ def main(path_to_config_file: str, model_version: int):
         accuracy = 100 * correct / total
 
         # Log evaluation metrics
-        wandb.log({"epoch": epoch, "eval_loss": avg_eval_loss, "accuracy": accuracy})
+        wandb.log(
+            {
+                "epoch": epoch,
+                "eval_loss": avg_eval_loss,
+                "accuracy": accuracy,
+                "hyperparameters": hyperparameters,
+            }
+        )
 
         # Check if this is the best model so far
         if accuracy > best_accuracy:
@@ -125,7 +129,12 @@ def main(path_to_config_file: str, model_version: int):
             print(f"New best model saved with accuracy: {best_accuracy:.2f}%")
 
             # Save the metrics
-            metrics = {"accuracy": accuracy, "eval_loss": avg_eval_loss, "epoch": epoch}
+            metrics = {
+                "accuracy": accuracy,
+                "eval_loss": avg_eval_loss,
+                "epoch": epoch,
+                "hyperparameters": hyperparameters,
+            }
             with open(best_metrics_path, "w") as f:
                 json.dump(metrics, f)
 
@@ -136,7 +145,7 @@ def main(path_to_config_file: str, model_version: int):
         # Print epoch statistics
         if (epoch + 1) % 10 == 0:
             print(
-                f"Epoch [{epoch+1}/{num_epochs}], Train Loss: {running_loss/len(train_loader):.4f}, "
+                f"Epoch [{epoch+1}/{hyperparameters['num_epochs']}], Train Loss: {running_loss/len(train_loader):.4f}, "
                 f"Eval Loss: {avg_eval_loss:.4f}, Accuracy: {accuracy:.2f}%"
             )
 

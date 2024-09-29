@@ -4,7 +4,7 @@ from fastapi import APIRouter, FastAPI
 
 from .common.config import API_VERSION, SWAGGER_TAGS, VERSION
 from .common.uri import HOME_URI, SWAGGER_DOCS_URI
-from .router import training
+from .router import training, inference, delete_model, retrieve_model_info
 
 L = logging.getLogger(__name__)
 
@@ -18,9 +18,10 @@ app = FastAPI(
 
 # Configure router
 router = APIRouter()
-router.include_router(training.router, prefix="/training")
-# router.include_router(inference.router, prefix="/inference")
-# router.include_router(retrieve_model_info.router, prefix="/retrieve_model_info")
+router.include_router(training.router)
+router.include_router(inference.router)
+router.include_router(retrieve_model_info.router)
+router.include_router(delete_model.router)
 app.include_router(router, prefix=f"/{API_VERSION}")
 
 

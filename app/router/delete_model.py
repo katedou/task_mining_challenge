@@ -1,19 +1,15 @@
 import os
-import json
+import shutil
 import yaml
-from ..common.uri import RETRIEVE_MODEL_URI
+from ..common.uri import DELETE_MDOEL_URI
 from fastapi import APIRouter, HTTPException
 from ..common.util import logger
-from ..common.schema import RetrieveModelResult, ModelVersion
+from ..common.schema import Response, ModelVersion
 
 router = APIRouter()
 
 
-@router.post(
-    RETRIEVE_MODEL_URI,
-    response_model=RetrieveModelResult,
-    tags=["RetrieveModelInformation"],
-)
+@router.post(DELETE_MDOEL_URI, response_model=Response, tags=["DeleteModel"])
 def delete_model(input_object: ModelVersion):
     model_version = input_object.model_version
     if not model_version:
@@ -28,21 +24,20 @@ def delete_model(input_object: ModelVersion):
         with open(config_path, "r") as config_file:
             config = yaml.safe_load(config_file)
 
-        path_to_model_metrics = os.path.join(
-            config["train"]["model_root_path"],
-            str(model_version),
-            "best_model_metrics.json",
-        )
+        paths_to_delete = [
+            os.path.join(config["train"]["model_root_path"], str(model_version)),
+            os.path.join(config["train"]["train_data_root_path"], str(model_version)),
+            os.path.join(config["train"]["test_data_root_path"], str(model_version)),
+        ]
 
-        with open(path_to_model_metrics, "r") as metrics_file:
-            model_metrics = json.load(metrics_file)
+        for path in paths_to_delete:
+            if os.path.exists(path):
+                shutil.rmtree(path)
+                logger.info(f"Deleted directory: {path}")
+            else:
+                logger.warning(f"Directory not found: {path}")
 
-        return RetrieveModelResult(
-            model_version=str(model_version),
-            accuracy=model_metrics["accuracy"],
-            eval_loss=model_metrics["eval_loss"],
-            hyperparameter=model_metrics["hyperparameters"],
-        )
+        return Response(response=f"Successfully deleted model version {model_version}")
     except Exception as e:
         logger.error("Error occurred: %s", e)
         raise HTTPException(

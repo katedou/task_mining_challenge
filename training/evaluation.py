@@ -11,7 +11,7 @@ from training.dataloader import GestureData
 from training.model import ShallowNet
 
 
-def evaluation(config_file_path: str):
+def evaluation(config_file_path: str, model_version):
     cfg = yaml.load(open(config_file_path, "r"), Loader=yaml.FullLoader)
     train_config = cfg["train"]
     test_config = cfg["test"]
@@ -21,7 +21,10 @@ def evaluation(config_file_path: str):
         hidden_dims=train_config["hidden_dims"],
         output_dim=train_config["output_dim"],
     )
-    state_dict = torch.load(test_config["path_to_model"], weights_only=True)
+    model_path = os.path.josin(
+        cfg["test"]["base_path_to_model"] + "/" + model_version, "best_model.pth"
+    )
+    state_dict = torch.load(model_path, weights_only=True)
     model.load_state_dict(state_dict)
     model.eval()
     correct = 0
