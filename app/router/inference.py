@@ -24,7 +24,9 @@ def predict(input_object: InferenceInput):
 
         prediction, probability = make_inference(model_version, input_data, config_path)
         return InferenceResult(
-            prediction=prediction, probability=probability, model_version=model_version
+            predicted_class=str(prediction),
+            probability=probability,
+            model_version=model_version,
         )
     except Exception as e:
         logger.error("Error occurred: %s", e)

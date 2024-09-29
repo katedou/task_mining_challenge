@@ -1,11 +1,11 @@
 from pydantic import BaseModel
-from typing import Dict
+from typing import Dict, List
 
 from .config import VERSION
 
 
 class ModelVersion(BaseModel):
-    model_version: int
+    model_version: str
 
 
 class Response(BaseModel):
@@ -19,7 +19,7 @@ class InferenceInput(BaseModel):
 
 
 class InferenceResult(BaseModel):
-    prediction: str
+    predicted_class: str
     model_version: str
     probability: float
 
@@ -29,3 +29,7 @@ class RetrieveModelResult(BaseModel):
     model_version: str
     eval_loss: float
     hyperparameter: dict
+
+
+class InsertData(BaseModel):
+    input_data: List[Dict[str, float]]

@@ -4,7 +4,7 @@ from fastapi import APIRouter, FastAPI
 
 from .common.config import API_VERSION, SWAGGER_TAGS, VERSION
 from .common.uri import HOME_URI, SWAGGER_DOCS_URI
-from .router import training, inference, delete_model, retrieve_model_info
+from .router import training, inference, delete_model, retrieve_model_info, insert_data
 
 L = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ router.include_router(training.router)
 router.include_router(inference.router)
 router.include_router(retrieve_model_info.router)
 router.include_router(delete_model.router)
+router.include_router(insert_data.router)
 app.include_router(router, prefix=f"/{API_VERSION}")
 
 

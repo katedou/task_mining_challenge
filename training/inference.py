@@ -33,7 +33,9 @@ def make_inference(model_version, input_data, config_file_path):
         cfg["test"]["base_path_to_model"], str(model_version), "best_model.pth"
     )
 
-    state_dict = torch.load(model_path, map_location=torch.device("cpu"))
+    state_dict = torch.load(
+        model_path, map_location=torch.device("cpu"), weights_only=True
+    )
     model.load_state_dict(state_dict)
 
     # Set the model to evaluation mode
@@ -49,6 +51,8 @@ def make_inference(model_version, input_data, config_file_path):
         # Process output (e.g., get predicted class)
         prob, predicted = torch.max(probabilities, 1)
 
+    # plus 1 to the prediction, as pytorch counts labels start from 0
+    # we need to shift our label to it's original version
     return predicted.item() + 1, prob.item()
 
 

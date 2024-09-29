@@ -14,3 +14,6 @@ train:
 test:
   path_to_test_data: './training/data/preprocessed_test_data/'
   base_path_to_model: './training/models'
+
+extend_data:
+  path_to_extend_data: "./training/data/uWaveGestures_2extend.parquet"
