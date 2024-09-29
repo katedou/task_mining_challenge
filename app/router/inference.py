@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post(INFERECE_URI, response_model=InferenceResult, tags=["Inference"])
-def predict(input_object: InferenceInput):
+async def predict(input_object: InferenceInput):
     model_version = input_object.model_version
     input_data = input_object.input_data
     if not model_version:
@@ -22,7 +22,9 @@ def predict(input_object: InferenceInput):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         config_path = os.path.join(current_dir, "..", "..", "training", "config.yaml")
 
-        prediction, probability = make_inference(model_version, input_data, config_path)
+        prediction, probability = await make_inference(
+            model_version, input_data, config_path
+        )
         return InferenceResult(
             predicted_class=str(prediction),
             probability=probability,

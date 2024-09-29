@@ -5,3 +5,5 @@ scikit-learn
 wandb~=0.18.2
 fastapi~=0.115.0
 fastapi[standard]
+asyncio~=3.4.3
+torch~=2.4.1

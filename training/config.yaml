@@ -6,7 +6,7 @@ train:
   batch_size: 16
   learning_rate: 0.01
   momentum: 0.9
-  num_epochs: 800
+  num_epochs: 100
   model_root_path: './training/models'
   train_data_root_path: './training/data/preprocessed_train_data/'
   test_data_root_path: './training/data/preprocessed_test_data/'
