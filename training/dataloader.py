@@ -79,7 +79,6 @@ class DataPreprocessor:
         """
         apply standardriztion to the input data
         """
-        print("X_train columns before fitting scaler:", X_train.columns)
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
         return X_train_scaled, X_test_scaled
@@ -127,9 +126,6 @@ class DataPreprocessor:
         """
         # Preprocess the data without fitting
         preprocessed_data, _ = self.preprocess_data(new_data, fit=False)
-
-        print("Preprocessed data columns:", preprocessed_data.columns)
-        print("Scaler feature names:", self.scaler.feature_names_in_)
 
         # Standardize the data
         preprocessed_data_scaled = self.scaler.transform(preprocessed_data)

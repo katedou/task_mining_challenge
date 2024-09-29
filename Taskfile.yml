@@ -47,3 +47,7 @@ tasks:
   docker-run:
     cmds:
     - docker run -it --cpus=2 --memory=4g -v $(pwd)/training/models:/app/training/models -v $(pwd)/training/data:/app/training/data -p 5000:5000 gesture-recognition:latest
+
+  pytest-run:
+    cmds:
+    - pytest -v -s --log-cli-level=DEBUG

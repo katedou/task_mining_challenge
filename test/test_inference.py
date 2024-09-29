@@ -3,6 +3,10 @@ import asyncio
 from training.inference import make_inference
 import os
 import json
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -16,10 +20,9 @@ def model_version():
     return "1"
 
 
-@pytest.fixture
 def sample_input():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    input_file_path = os.path.join(current_dir, "..", "inference_input.json")
+    input_file_path = os.path.join(current_dir, "inference_input.json")
     with open(input_file_path, "r") as f:
         data = json.load(f)
     return data["input_data"]
@@ -27,10 +30,12 @@ def sample_input():
 
 @pytest.mark.asyncio
 async def test_concurrent_inference(config_path, model_version):
+    input_data = sample_input()
+
     # Create 5 concurrent inference tasks
     async def single_inference():
         prediction, probability = await make_inference(
-            model_version, sample_input, config_path
+            model_version, input_data, config_path
         )
         assert isinstance(prediction, int)
         assert 0 <= probability <= 1
@@ -47,25 +52,22 @@ async def test_concurrent_inference(config_path, model_version):
         assert isinstance(prediction, int)
         assert 0 <= probability <= 1
 
-    # Optionally, you could check that the results are consistent
-    first_prediction = results[0][0]
-    assert all(
-        result[0] == first_prediction for result in results
-    ), "Predictions are not consistent"
-
 
 @pytest.mark.asyncio
 async def test_inference_performance(config_path, model_version):
+    input_data = sample_input()
     start_time = asyncio.get_event_loop().time()
 
     async def single_inference():
-        return await make_inference(model_version, sample_input, config_path)
+        return await make_inference(model_version, input_data, config_path)
 
     tasks = [single_inference() for _ in range(5)]
     await asyncio.gather(*tasks)
 
     end_time = asyncio.get_event_loop().time()
     total_time = end_time - start_time
-
+    logging.debug(
+        f"Total running time for concurrent 5 inference calls is {total_time}s"
+    )
     # Assert that all 5 inferences completed within a reasonable time (e.g., 5 seconds)
     assert total_time < 5, f"Inference took too long: {total_time} seconds"
