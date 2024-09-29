@@ -1,1 +1,1 @@
-{"accuracy": 91.18303571428571, "eval_loss": 0.24800462611684843, "epoch": 463, "hyperparameters": {"input_dim": 48, "hidden_dims": [128, 64, 32], "output_dim": 8, "momentum": 0.9, "learning_rate": 0.01, "num_epochs": 800, "batch_size": 16}}
+{"accuracy": 91.18303571428571, "eval_loss": 0.24117213650606573, "epoch": 296, "hyperparameters": {"input_dim": 48, "hidden_dims": [128, 64, 32], "output_dim": 8, "momentum": 0.9, "learning_rate": 0.01, "num_epochs": 800, "batch_size": 16}}
