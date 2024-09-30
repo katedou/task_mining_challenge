@@ -64,7 +64,7 @@ For developers and data scientists who want to run the training locally with fin
 2. Run `task pytest-run`.
 
 
-### Todos for making this application production-ready:
+## Todos for making this application production-ready:
 
 1. Cloud deployment: Move the solution to a cloud platform (e.g., Azure) for better management and scalability.
    - Use Azure Blob Storage for model and data storage
@@ -95,6 +95,7 @@ For developers and data scientists who want to run the training locally with fin
 
 7. Implement CI/CD pipeline:
    - Automate orchestration
+   - Include automated testing in the pipeline
    - Streamline cloud deployment
    - Facilitate smooth model releases
 
