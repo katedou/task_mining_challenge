@@ -65,7 +65,6 @@ For developers and data scientists who want to run the training locally with fin
 
 
 ## Todos for making this application production-ready:
-
 1. Cloud deployment: Move the solution to a cloud platform (e.g., Azure) for better management and scalability.
    - Use Azure Blob Storage for model and data storage
    - Utilize Azure Container Registry for container image management
