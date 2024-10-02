@@ -9,7 +9,7 @@ from ..common.schema import Response, ModelVersion
 router = APIRouter()
 
 
-@router.post(DELETE_MDOEL_URI, response_model=Response, tags=["DeleteModel"])
+@router.delete(DELETE_MDOEL_URI, response_model=Response, tags=["DeleteModel"])
 def delete_model(input_object: ModelVersion):
     model_version = input_object.model_version
     if not model_version:

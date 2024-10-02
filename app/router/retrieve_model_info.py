@@ -14,7 +14,7 @@ router = APIRouter()
     response_model=RetrieveModelResult,
     tags=["RetrieveModelInformation"],
 )
-def delete_model(input_object: ModelVersion):
+def retrieve_model(input_object: ModelVersion):
     model_version = input_object.model_version
     if not model_version:
         logger.error("Input model version is empty")

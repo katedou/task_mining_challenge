@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post(INSERT_DATA_URI, response_model=Response, tags=["InsertDataset"])
-def predict(input_object: InsertData):
+def insert_data(input_object: InsertData):
     input_data = input_object.input_data
     if not input_data:
         logger.error("Input data is empty")
